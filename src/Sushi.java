@@ -1,5 +1,6 @@
 import java.util.Scanner;
 
+
 public class Sushi {
 	Scanner reader;
 	static final int NEW_GAME = 0;
