@@ -1,4 +1,4 @@
-package sushi;
+
 
 public class Sushi {
 	public static void main(String args) {
