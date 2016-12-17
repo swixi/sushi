@@ -5,7 +5,7 @@ public class Game {
 	
 	public Game(int playerCount) {
 		PLAYER_COUNT = playerCount;
-		System.out.println("Starting new game with " + PLAYERS + " players.");
+		System.out.println("Starting new game with " + PLAYER_COUNT + " players.");
 		players = new ArrayList<Player>(PLAYER_COUNT);
 		initializePool();
 			
