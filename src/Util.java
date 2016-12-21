@@ -1,4 +1,3 @@
-import java.util.Arrays;
 import java.util.Scanner;
 
 public class Util {	
@@ -70,7 +69,9 @@ public class Util {
 	
 	public static String getUserChoice() {
 		Scanner scanner = new Scanner(System.in);
-		return scanner.nextLine();		
+		String output = scanner.nextLine();
+		scanner.close();
+		return output;
 	}
 	
 	public static int strToInt(String input) {
