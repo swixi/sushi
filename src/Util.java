@@ -5,11 +5,12 @@ public class Util {
 	
 	//INPUT: an array of strings to display to the user, where arg[0] is the title, and arg[1] -> arg[n] are the options
 	//the options will be displayed with the numbering choices[0], choices[1], ...
-	//choices must contain POSITIVE integers (else will throw errors)
+	//choices must contain non-negative integers (else will throw errors)
 	//OUTPUT: the user's (valid) choice
 	public static int intMenu(String[] args, int[] choices) {
 		String display = args[0] + ": ";
 		
+		//the indices of choices are assumed to match those of args for convenience
 		for(int i = 1; i < args.length; i++) {
 			display += "\n" + choices[i] + ". " + args[i];
 		}
@@ -35,14 +36,14 @@ public class Util {
 	//the options will be displayed with the numbering 1, 2, ...
 	//OUTPUT: the user's (valid) choice or -1 if an error
 	public static int intMenu(String[] args) {
-		if(args.length <= 2) {
+		if(args.length < 2) {
 			System.out.println("Error: title with no options!");
 			return -1;
 		}
 		
-		int[] choices = new int[args.length-1];
+		int[] choices = new int[args.length];
 		for(int i = 1; i < args.length; i++) {
-			choices[i] = i+1;
+			choices[i] = i;
 		}
 		return intMenu(args, choices);		
 	}
@@ -53,12 +54,13 @@ public class Util {
 		return intMenu(args, choices);
 	}
 	
+	//assuming min and max are non-negative
 	public static int intMenu(String title, int min, int max) {
 		String[] args = new String[1];
 		args[0] = title;
 		int[] choices = new int[max-min+1];
-		for(int i = min; i <= max; i++) {
-			choices[i] = i;
+		for(int i = 0; i < choices.length; i++) {
+			choices[i] = min+i;
 		}
 		return intMenu(args, choices);
 	}
@@ -70,7 +72,7 @@ public class Util {
 	public static String getUserChoice() {
 		Scanner scanner = new Scanner(System.in);
 		String output = scanner.nextLine();
-		scanner.close();
+		//scanner.close();
 		return output;
 	}
 	

@@ -1,12 +1,6 @@
 public class Sushi {	
 	public static void main(String[] args) {
-		try {
-			new Sushi().run();
-		}
-		catch(Exception e) {
-			System.err.println(e.getMessage());
-		}
-		
+		new Sushi().run();
 		System.exit(0);
 	}
 	
