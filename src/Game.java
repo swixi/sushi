@@ -1,3 +1,7 @@
+import java.util.*;
+
+import cards.*;
+
 public class Game {
 	final int PLAYER_COUNT;
 	private Map<Card, Integer> cardPool;
@@ -9,6 +13,10 @@ public class Game {
 		players = new ArrayList<Player>(PLAYER_COUNT);
 		initializePool();
 			
+	}
+
+	public void start() {
+
 	}
 
 	public void initializePool() {
