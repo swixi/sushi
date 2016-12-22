@@ -31,20 +31,23 @@ public class Game {
 		
 		initPool();
 		
-		for(int i = 1; i <= 3; i++)
+		for(int i = 0; i < 3; i++)
 			runRound(i);
 		
 		
 	}
 
 	public void runRound(int round) {
-		System.out.println("Starting round " + round + "!");
+		System.out.println("Starting round " + (round+1) + "!");
+		for(Player player : players)
+			player.initDeck(HAND_SIZE);
 		
 		//key = which player to display to, value = hand
 		Map<Integer, List<Card>> hands = initHands();
 		
 		for(int i = 0; i < HAND_SIZE; i++) {
-			
+			System.out.println("Your cards: " + players.get(0).getDeck(round));
+			System.out.println("Cards to choose from: " + hands.get(0));
 		}
 		
 	}
@@ -53,11 +56,12 @@ public class Game {
 	public HashMap<Integer, List<Card>> initHands() {
 		HashMap<Integer, List<Card>> hands = new HashMap<Integer, List<Card>>();
 		
-		for(int i = 1; i <= PLAYER_COUNT; i++) {
+		for(int i = 0; i < PLAYER_COUNT; i++) {
 			List<Card> hand = new ArrayList<Card>(HAND_SIZE);
 			
 			for(int j = 0; j < HAND_SIZE; j++) {
-				String randCard = Card.NAMES[(int) System.nanoTime() % Card.NAMES.length];
+				String randCard = Card.NAMES[(int) (System.nanoTime() % Card.NAMES.length)];
+				System.out.println(randCard);
 				int copiesLeft = cardPool.get(randCard);
 				
 				if(copiesLeft > 0) {
@@ -70,7 +74,6 @@ public class Game {
 			
 			hands.put(i, hand);
 		}
-		
 		
 		return hands;
 	}
@@ -85,5 +88,18 @@ public class Game {
 
 	public void initPool() {
 		cardPool = new HashMap<String, Integer>();
+		
+		cardPool.put("tempura", 14);
+		cardPool.put("sashimi", 14);
+		cardPool.put("dumplings", 14);
+		cardPool.put("maki 1", 6);
+		cardPool.put("maki 2", 12);
+		cardPool.put("maki 3", 8);
+		cardPool.put("nigiri egg", 5);
+		cardPool.put("nigiri salmon", 10);
+		cardPool.put("nigiri squid", 5);
+		cardPool.put("pudding", 10);
+		cardPool.put("wasabi", 6);
+		cardPool.put("chopsticks", 4);		
 	}
 }
