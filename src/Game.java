@@ -33,23 +33,29 @@ public class Game {
 		
 		for(int i = 0; i < 3; i++)
 			runRound(i);
-		
-		
+			
 	}
 
 	public void runRound(int round) {
+		
+		
+		
 		System.out.println("Starting round " + (round+1) + "!");
 		for(Player player : players)
-			player.initDeck(HAND_SIZE);
+			player.initRoundDeck(HAND_SIZE);
 		
 		//key = which player to display to, value = hand
 		Map<Integer, List<Card>> hands = initHands();
 		
 		for(int i = 0; i < HAND_SIZE; i++) {
 			System.out.println("Your cards: " + players.get(0).getDeck(round));
-			System.out.println("Cards to choose from: " + hands.get(0));
+			int choice = Util.intMenu("Choose a card:", Util.cardsToStrings(hands.get(0)));
+			players.get(0).addToDeck(hands.get(0).get(choice-1), round);
+			hands.get(0).remove(choice-1);
+			
+			
+			
 		}
-		
 	}
 	
 	//randomly create hands, one for each player, each of size HAND_SIZE
@@ -61,7 +67,7 @@ public class Game {
 			
 			for(int j = 0; j < HAND_SIZE; j++) {
 				String randCard = Card.NAMES[(int) (System.nanoTime() % Card.NAMES.length)];
-				System.out.println(randCard);
+				//System.out.println(randCard);
 				int copiesLeft = cardPool.get(randCard);
 				
 				if(copiesLeft > 0) {
@@ -76,14 +82,6 @@ public class Game {
 		}
 		
 		return hands;
-	}
-	
-	public List<Card> pickFromPool(int number) {
-		//for(int i = 0; i < )
-		
-		
-		
-		return null;
 	}
 
 	public void initPool() {
@@ -101,5 +99,13 @@ public class Game {
 		cardPool.put("pudding", 10);
 		cardPool.put("wasabi", 6);
 		cardPool.put("chopsticks", 4);		
+	}
+	
+	public int poolSize() {
+		int size = 0;
+		Set<String> keys = cardPool.keySet();
+		for(String card : keys)
+			size += cardPool.get(card);
+		return size;
 	}
 }

@@ -1,18 +1,19 @@
+import java.util.List;
 import java.util.Scanner;
+import cards.Card;
 
 public class Util {	
 	public static final int PARSE_ERROR = -1;
 	
-	//INPUT: an array of strings to display to the user, where arg[0] is the title, and arg[1] -> arg[n] are the options
-	//the options will be displayed with the numbering choices[0], choices[1], ...
+	//INPUT: a title and an array of strings (options) to display to the user
+	//the options will be displayed with the numbers numbering[0], numbering[1], ...
 	//choices must contain non-negative integers (else will throw errors)
 	//OUTPUT: the user's (valid) choice
-	public static int intMenu(String[] args, int[] choices) {
-		String display = args[0] + ": ";
+	public static int intMenu(String title, String[] options, int[] numbering) {
+		String display = title;
 		
-		//the indices of choices are assumed to match those of args for convenience
-		for(int i = 1; i < args.length; i++) {
-			display += "\n" + choices[i] + ". " + args[i];
+		for(int i = 0; i < options.length; i++) {
+			display += "\n" + numbering[i] + ". " + options[i];
 		}
 		
 		System.out.println(display);
@@ -25,44 +26,36 @@ public class Util {
 				continue;
 			}
 			
-			if(findInArray(choices, userChoice))
+			if(findInArray(numbering, userChoice))
 				return userChoice;
 			
 			System.out.println("Not a valid option.");
 		}	
 	}
 	
-	//INPUT: an array of strings to display to the user, where arg[0] is the title, and arg[1] -> arg[n] are the options
-	//the options will be displayed with the numbering 1, 2, ...
+	//INPUT: a title and an array of strings (options) to display to the user
+	//the options will be displayed with the default numbering 1, 2, ...
 	//OUTPUT: the user's (valid) choice or -1 if an error
-	public static int intMenu(String[] args) {
-		if(args.length < 2) {
-			System.out.println("Error: title with no options!");
-			return -1;
+	public static int intMenu(String title, String[] options) {		
+		int[] numbering = new int[options.length];
+		for(int i = 0; i < options.length; i++) {
+			numbering[i] = i+1;
 		}
-		
-		int[] choices = new int[args.length];
-		for(int i = 1; i < args.length; i++) {
-			choices[i] = i;
-		}
-		return intMenu(args, choices);		
+		return intMenu(title, options, numbering);		
 	}
 	
-	public static int intMenu(String title, int[] choices) {
-		String[] args = new String[1];
-		args[0] = title;
-		return intMenu(args, choices);
+	//no options displayed, only a given set of valid numbers
+	public static int intMenu(String title, int[] numbering) {
+		return intMenu(title, new String[0], numbering);
 	}
 	
 	//assuming min and max are non-negative
 	public static int intMenu(String title, int min, int max) {
-		String[] args = new String[1];
-		args[0] = title;
-		int[] choices = new int[max-min+1];
-		for(int i = 0; i < choices.length; i++) {
-			choices[i] = min+i;
+		int[] numbering = new int[max-min+1];
+		for(int i = 0; i < numbering.length; i++) {
+			numbering[i] = min+i;
 		}
-		return intMenu(args, choices);
+		return intMenu(title, numbering);
 	}
 	
 	public static String strMenu(String[] args) {
@@ -91,5 +84,21 @@ public class Util {
 			if(elt == key)
 				return true;
 		return false;
+	}
+	
+	public static String[] cardsToStrings(List<Card> input) {
+		String[] output = new String[input.size()];
+		for(int i = 0; i < input.size(); i++)
+			output[i] = input.get(i).getName();
+		return output;			
+	}
+	
+	public static String[] concat(String[] arr1, String[] arr2) {
+		String[] output = new String[arr1.length + arr2.length];
+		for(int i = 0; i < arr1.length; i++)
+			output[i] = arr1[i];
+		for(int i = 0; i < arr2.length; i++)
+			output[arr1.length + i] = arr2[i];
+		return output;
 	}
 }

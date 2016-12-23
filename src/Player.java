@@ -29,7 +29,7 @@ public class Player {
 		return deck.get(round);
 	}
 	
-	public void initDeck(int handSize){
+	public void initRoundDeck(int handSize){
 		List<Card> roundDeck = new ArrayList<Card>(handSize);
 		deck.add(roundDeck);
 	}

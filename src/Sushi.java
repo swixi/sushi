@@ -8,7 +8,7 @@ public class Sushi {
 		System.out.println("MMMM SUSHI GO!");
 		
 		while(true) {
-			int userChoice = Util.intMenu(new String[]{"Choose an option", "New game", "Exit"});
+			int userChoice = Util.intMenu("Choose an option:", new String[]{"New game", "Exit"});
 			
 			if(userChoice == 1)
 				newGame();
@@ -18,7 +18,7 @@ public class Sushi {
 	}
 	
 	public void newGame() {
-		int playerCount = Util.intMenu("Select number of players (2-5)", 2, 5);
+		int playerCount = Util.intMenu("Select number of players (2-5):", 2, 5);
 		new Game(playerCount);
 	}	
 }
