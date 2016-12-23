@@ -35,7 +35,7 @@ public class Card {
 		if(name == "chopsticks")
 			return "Chopsticks (can swap for two cards)";
 		if(name == "pudding")
-			return "Pudding";
+			return "Pudding (no points until end of game)";
 		
 		return name;
 	}

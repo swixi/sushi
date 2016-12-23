@@ -1,5 +1,6 @@
 public class Sushi {	
-	private boolean descriptiveNames = false;
+	public static boolean descriptiveNames = false;
+	
 	public static void main(String[] args) {
 		new Sushi().run();
 		System.exit(0);

@@ -95,8 +95,12 @@ public class Util {
 	
 	public static String[] cardsToStrings(List<Card> input) {
 		String[] output = new String[input.size()];
-		for(int i = 0; i < input.size(); i++)
-			output[i] = input.get(i).descriptiveName();
+		for(int i = 0; i < input.size(); i++) {
+			if(Sushi.descriptiveNames)
+				output[i] = input.get(i).descriptiveName();
+			else
+				output[i] = input.get(i).getName();
+		}
 		return output;			
 	}
 	
