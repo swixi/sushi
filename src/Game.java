@@ -129,7 +129,7 @@ public class Game {
 	public void scoreRound(int round) {
 		System.out.println("\nScores:");
 		int[] roundScores = new int[PLAYER_COUNT];
-		int[] makiScores = new int[PLAYER_COUNT];
+		int[] makiSums = new int[PLAYER_COUNT];
 		
 		for(int i = 0; i < PLAYER_COUNT; i++) {
 			Player player = players.get(i);
@@ -140,23 +140,22 @@ public class Game {
 				Card card = hand.get(j);
 				if(card.getName().contains("maki")) {
 					int amount = Integer.parseInt(card.getName().substring(5));
-					makiScores[i] += amount;
+					makiSums[i] += amount;
 					hand.remove(j);
 					j--;
 				}
 			}			
 			
-			roundScores[i] += scoreHand(hand);
-			player.addScore(roundScores[i]);
-			
-			
+			roundScores[i] += scoreHand(hand);			
 		}
 		
+		scoreMaki(makiSums, roundScores);
 		
-		
-		for(int i = 0; i < PLAYER_COUNT; i++) 
+		for(int i = 0; i < PLAYER_COUNT; i++) {
+			players.get(i).addScore(roundScores[i]);
 			System.out.println("Player " + (i+1) + ": " + players.get(i).getScore() + " (+" + roundScores[i] + ")"
-					+ " (Maki score: " + makiScores[i] + ")");
+					+ " (Maki score: " + makiSums[i] + ")");
+		}
 		
 		System.out.println("");
 	}
@@ -224,12 +223,42 @@ public class Game {
 				score += 2;
 			else if(card.getName().equals("nigiri squid"))
 				score += 3;
-				
-				
+			
 			hand.remove(0);	
 		}
 		
-		
 		return score;
+	}
+	
+	//can probably do this in one loop if you think about it for 10 minutes
+	public void scoreMaki(int[] makiSums, int[] roundScores) {
+		int largestSum = 0;
+		int secondLargestSum = 0;
+		int firstPlaceCount = 0;
+		int secondPlaceCount = 0;
+		
+		for(int sum : makiSums) {
+			if(sum > largestSum) {
+				secondLargestSum = largestSum;
+				largestSum = sum;
+			}
+		}
+		
+		for(int i = 0; i < PLAYER_COUNT; i++) {
+			if(makiSums[i] == largestSum)
+				firstPlaceCount++;
+			if(makiSums[i] == secondLargestSum)
+				secondPlaceCount++;
+		}
+		
+		int firstPoints = 6/firstPlaceCount;
+		int secondPoints = (firstPlaceCount > 1) ? 0 : 3/secondPlaceCount;
+		
+		for(int i = 0; i < PLAYER_COUNT; i++) {
+			if(makiSums[i] == largestSum)
+				roundScores[i] += firstPoints;
+			else if(makiSums[i] == secondLargestSum)
+				roundScores[i] += secondPoints;
+		}
 	}
 }
