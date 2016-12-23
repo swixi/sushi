@@ -1,5 +1,3 @@
-package cards;
-
 public class Card {
 	private String name;
 	public static String[] NAMES = new String[]{"tempura", "sashimi", "dumplings", "wasabi", "maki 1", "maki 2",

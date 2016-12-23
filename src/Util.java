@@ -1,6 +1,5 @@
 import java.util.List;
 import java.util.Scanner;
-import cards.Card;
 
 public class Util {	
 	public static final int PARSE_ERROR = -1;

@@ -1,7 +1,5 @@
 import java.util.*;
 
-import cards.*;
-
 public class Game {
 	final int PLAYER_COUNT;
 	final int HAND_SIZE;
