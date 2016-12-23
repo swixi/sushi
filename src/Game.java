@@ -22,7 +22,7 @@ public class Game {
 		else
 			HAND_SIZE = -1;
 		
-		System.out.println("Starting new game with " + PLAYER_COUNT + " players.");
+		System.out.println("\nStarting new game with " + PLAYER_COUNT + " players.\n");
 		
 		players = new ArrayList<Player>(PLAYER_COUNT);
 		players.add(new Player(Player.HUMAN));
@@ -33,30 +33,40 @@ public class Game {
 		
 		for(int i = 0; i < 3; i++)
 			runRound(i);
+		
+		//scoreGame();
 			
 	}
 
 	public void runRound(int round) {		
-		System.out.println("Starting ROUND " + (round+1) + "!");
+		System.out.println(" --------\n|ROUND " + (round+1) + "!|\n --------");
 		for(Player player : players)
-			player.initRoundDeck(HAND_SIZE);
+			player.initDeckHand(HAND_SIZE);
 		
 		//key = which player to display to, value = hand
 		Map<Integer, List<Card>> hands = initHands();
 		
 		for(int i = 0; i < HAND_SIZE; i++) {
-			System.out.println("Your cards: " + players.get(0).getDeck(round));
-			int choice = Util.intMenu("Choose a card:", Util.cardsToStrings(hands.get(0)));
-			players.get(0).addToDeck(hands.get(0).get(choice-1), round);
-			hands.get(0).remove(choice-1);
+			//process humans
+			Player curPlayer = players.get(0);
+			System.out.println("\nYour cards: " + curPlayer.getHand(round));
 			
-			//pick for the AI
-			for(int j = 1; j < PLAYER_COUNT; j++)
+			List<Card> curHand = hands.get(0);
+			int choice = Util.intMenu("Choose a card:", Util.cardsToStrings(curHand));
+			curPlayer.addToDeck(curHand.get(choice-1), round);
+			curHand.remove(choice-1);
+			
+			//process AI (right now, always choose the first card)
+			for(int j = 1; j < PLAYER_COUNT; j++) {
+				players.get(j).addToDeck(hands.get(j).get(0), round);
 				hands.get(j).remove(0);
+			}
 			
 			hands = rotateHands(hands);
-			
 		}
+		
+		scoreRound(round);
+		Util.waitForEnter();
 	}
 	
 	//moves each hand to the left
@@ -108,7 +118,7 @@ public class Game {
 		cardPool.put("nigiri squid", 5);
 		cardPool.put("pudding", 10);
 		cardPool.put("wasabi", 6);
-		cardPool.put("chopsticks", 4);		
+		cardPool.put("chopsticks", 4);	
 	}
 	
 	public int poolSize() {
@@ -117,5 +127,70 @@ public class Game {
 		for(String card : keys)
 			size += cardPool.get(card);
 		return size;
+	}
+	
+	public void scoreRound(int round) {
+		System.out.println("\nScores:");
+		int[] roundScores = new int[PLAYER_COUNT];
+		int[] makiScores = new int[PLAYER_COUNT];
+		
+		for(int i = 0; i < PLAYER_COUNT; i++) {
+			Player player = players.get(i);
+			List<Card> hand = player.getHand(round);
+			roundScores[i] += scoreHand(hand);
+			player.addScore(roundScores[i]);
+			
+			for(Card card : hand) {
+				if(card.getName() == "maki 1")
+					makiScores[i] += 1;
+				if(card.getName() == "maki 2")
+					makiScores[i] += 2;
+				if(card.getName() == "maki 3")
+					makiScores[i] += 3;
+			}
+		}
+		
+		
+		
+		for(int i = 0; i < PLAYER_COUNT; i++) 
+			System.out.println("Player " + (i+1) + ": " + players.get(i).getScore() + " (+" + roundScores[i] + ")");
+		
+		System.out.println("");
+	}
+	
+	//no maki
+	//MODIFIES PLAYER HANDS
+	public int scoreHand(List<Card> hand) {
+		int score = 0;
+		int nextInstance = -1;
+		Card card;
+		while(hand.size() > 0) {
+			card = hand.get(0);
+			
+			if(card.getName() == "tempura") {
+				nextInstance = Util.findCardInHand(hand, card);
+				if(nextInstance != -1) {
+					hand.remove(nextInstance);
+					score += 5;
+				}
+			} else if(card.getName() == "sashimi") {
+				nextInstance = Util.findCardInHand(hand, card);
+				if(nextInstance != -1) {
+					hand.remove(nextInstance);
+					nextInstance = Util.findCardInHand(hand, card);
+					if(nextInstance != -1) {
+						hand.remove(nextInstance);
+						score += 10;
+					}
+				}
+			}
+				
+				
+				
+			hand.remove(0);	
+		}
+		
+		
+		return score;
 	}
 }

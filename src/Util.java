@@ -4,6 +4,7 @@ import cards.Card;
 
 public class Util {	
 	public static final int PARSE_ERROR = -1;
+	private static Scanner scanner;
 	
 	//INPUT: a title and an array of strings (options) to display to the user
 	//the options will be displayed with the numbers numbering[0], numbering[1], ...
@@ -62,8 +63,14 @@ public class Util {
 		return null;
 	}
 	
+	public static void waitForEnter() {
+		scanner = new Scanner(System.in);
+		System.out.println("Press enter to continue.");
+		scanner.nextLine();
+	}
+	
 	public static String getUserChoice() {
-		Scanner scanner = new Scanner(System.in);
+		scanner = new Scanner(System.in);
 		String output = scanner.nextLine();
 		//scanner.close();
 		return output;
@@ -100,5 +107,14 @@ public class Util {
 		for(int i = 0; i < arr2.length; i++)
 			output[arr1.length + i] = arr2[i];
 		return output;
+	}
+	
+	//returns the index of the first instance with is not index 0
+	public static int findCardInHand(List<Card> hand, Card key) {
+		 for(int i = 1; i < hand.size(); i++) {
+			 if(hand.get(i).getName() == key.getName())
+				 return i;
+		 }
+		 return -1;
 	}
 }

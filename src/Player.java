@@ -7,10 +7,13 @@ public class Player {
 	private final int TYPE;
 	private int score;
 	private List<List<Card>> deck;
+	private List<Card> puddings;
+	private int[] maki;
 
 	public Player(int type) {
 		TYPE = type;
 		deck = new ArrayList<List<Card>>(3);
+		maki = new int[3];
 	}
 
 	public int getType() {
@@ -25,16 +28,30 @@ public class Player {
 		return score;
 	}
 	
-	public List<Card> getDeck(int round) {
+	public List<Card> getHand(int round) {
 		return deck.get(round);
 	}
 	
-	public void initRoundDeck(int handSize){
-		List<Card> roundDeck = new ArrayList<Card>(handSize);
-		deck.add(roundDeck);
+	public void initDeckHand(int handSize){
+		List<Card> hand = new ArrayList<Card>(handSize);
+		deck.add(hand);
 	}
 	
 	public void addToDeck(Card card, int round) {
 		deck.get(round).add(card);
+	}
+	
+	public void addPudding() {
+		if(puddings == null)
+			puddings = new ArrayList<Card>();
+		puddings.add(new Card("pudding"));
+	}
+	
+	public void addMaki(int amount, int round) {
+		maki[round] += amount;
+	}
+	
+	public int getMaki(int round) {
+		return maki[round];
 	}
 }
