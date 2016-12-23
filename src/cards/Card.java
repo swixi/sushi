@@ -13,6 +13,33 @@ public class Card {
 		return name;
 	}
 	
+	public String descriptiveName() {
+		if(name == "tempura")
+			return "Tempura (x1 = 0, x2 = 5)";
+		if(name == "sashimi")
+			return "Sashimi (x1 = 0, x2 = 0, x3 = 10)";
+		if(name == "dumplings")
+			return "Dumplings (x1 = 1, x2 = 3, x3 = 6, x4 = 10, x5 = 15)";
+		if(name == "wasabi")
+			return "Wasabi (x3 multiplier for next nigiri)";
+		if(name.contains("maki")) {
+			int num = Integer.parseInt(name.substring(5));
+			return "Maki " + num + " (most maki earns 6, second earns 3)";
+		}
+		if(name == "nigiri egg")
+			return "Egg Nigiri (1)";
+		if(name == "nigiri salmon")
+			return "Salmon Nigiri (2)";
+		if(name == "nigiri squid")
+			return "Squid Nigiri (3)";
+		if(name == "chopsticks")
+			return "Chopsticks (can swap for two cards)";
+		if(name == "pudding")
+			return "Pudding";
+		
+		return name;
+	}
+	
 	@Override
 	public String toString() {
 		return name;

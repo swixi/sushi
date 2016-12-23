@@ -96,7 +96,7 @@ public class Util {
 	public static String[] cardsToStrings(List<Card> input) {
 		String[] output = new String[input.size()];
 		for(int i = 0; i < input.size(); i++)
-			output[i] = input.get(i).getName();
+			output[i] = input.get(i).descriptiveName();
 		return output;			
 	}
 	

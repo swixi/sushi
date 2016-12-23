@@ -39,7 +39,7 @@ public class Game {
 	}
 
 	public void runRound(int round) {		
-		System.out.println(" --------\n|ROUND " + (round+1) + "!|\n --------");
+		System.out.println(" --------\n|ROUND " + (round+1) + "!|\n --------\n");
 		for(Player player : players)
 			player.initDeckHand(HAND_SIZE);
 		
@@ -48,9 +48,7 @@ public class Game {
 		
 		for(int i = 0; i < HAND_SIZE; i++) {
 			//process humans
-			Player curPlayer = players.get(0);
-			System.out.println("\nYour cards: " + curPlayer.getHand(round));
-			
+			Player curPlayer = players.get(0);			
 			List<Card> curHand = hands.get(0);
 			int choice = Util.intMenu("Choose a card:", Util.cardsToStrings(curHand));
 			curPlayer.addToDeck(curHand.get(choice-1), round);
@@ -63,6 +61,7 @@ public class Game {
 			}
 			
 			hands = rotateHands(hands);
+			System.out.println("\nYour cards: " + curPlayer.getHand(round));
 		}
 		
 		scoreRound(round);
