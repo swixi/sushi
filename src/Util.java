@@ -115,7 +115,7 @@ public class Util {
 	//returns the index of the first instance with is not index 0
 	public static int findCardInHand(List<Card> hand, Card key) {
 		 for(int i = 1; i < hand.size(); i++) {
-			 if(hand.get(i).getName() == key.getName())
+			 if(hand.get(i).getName().equals(key.getName()))
 				 return i;
 		 }
 		 return -1;

@@ -134,23 +134,29 @@ public class Game {
 		for(int i = 0; i < PLAYER_COUNT; i++) {
 			Player player = players.get(i);
 			List<Card> hand = player.getHand(round);
+			
+			//first count maki and remove from hand
+			for(int j = 0; j < hand.size(); j++) {
+				Card card = hand.get(j);
+				if(card.getName().contains("maki")) {
+					int amount = Integer.parseInt(card.getName().substring(5));
+					makiScores[i] += amount;
+					hand.remove(j);
+					j--;
+				}
+			}			
+			
 			roundScores[i] += scoreHand(hand);
 			player.addScore(roundScores[i]);
 			
-			for(Card card : hand) {
-				if(card.getName() == "maki 1")
-					makiScores[i] += 1;
-				if(card.getName() == "maki 2")
-					makiScores[i] += 2;
-				if(card.getName() == "maki 3")
-					makiScores[i] += 3;
-			}
+			
 		}
 		
 		
 		
 		for(int i = 0; i < PLAYER_COUNT; i++) 
-			System.out.println("Player " + (i+1) + ": " + players.get(i).getScore() + " (+" + roundScores[i] + ")");
+			System.out.println("Player " + (i+1) + ": " + players.get(i).getScore() + " (+" + roundScores[i] + ")"
+					+ " (Maki score: " + makiScores[i] + ")");
 		
 		System.out.println("");
 	}
@@ -164,13 +170,14 @@ public class Game {
 		while(hand.size() > 0) {
 			card = hand.get(0);
 			
-			if(card.getName() == "tempura") {
+			if(card.getName().equals("tempura")) {
 				nextInstance = Util.findCardInHand(hand, card);
 				if(nextInstance != -1) {
 					hand.remove(nextInstance);
 					score += 5;
 				}
-			} else if(card.getName() == "sashimi") {
+			} 
+			else if(card.getName().equals("sashimi")) {
 				nextInstance = Util.findCardInHand(hand, card);
 				if(nextInstance != -1) {
 					hand.remove(nextInstance);
@@ -181,7 +188,42 @@ public class Game {
 					}
 				}
 			}
+			else if(card.getName().equals("dumplings")) {
+				nextInstance = Util.findCardInHand(hand, card);
+				int count = 1;
 				
+				while(nextInstance != -1) {					
+					count++;
+					hand.remove(nextInstance);
+					nextInstance = Util.findCardInHand(hand, card);
+				}
+				
+				int dumplingScore = (count*(count+1)/2);
+				if(dumplingScore > 15)
+					dumplingScore = 15;
+				score += dumplingScore;
+			}
+			else if(card.getName().equals("wasabi")) {
+				for(int i = 1; i < hand.size(); i++) {
+					if(hand.get(i).getName().contains("nigiri")) {
+						if(hand.get(i).getName().contains("egg"))
+							score += 3;
+						if(hand.get(i).getName().contains("salmon"))
+							score += 6;
+						if(hand.get(i).getName().contains("squid"))
+							score += 9;
+						
+						hand.remove(i);
+						break;
+					}
+				}
+			}
+			else if(card.getName().equals("nigiri egg"))
+				score += 1;
+			else if(card.getName().equals("nigiri salmon"))
+				score += 2;
+			else if(card.getName().equals("nigiri squid"))
+				score += 3;
 				
 				
 			hand.remove(0);	

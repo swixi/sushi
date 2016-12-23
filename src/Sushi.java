@@ -10,7 +10,7 @@ public class Sushi {
 		System.out.println("MMMM SUSHI GO!");
 		
 		while(true) {
-			int userChoice = Util.intMenu("\nMain menu", new String[]{"New game", "Options", "Exit"});
+			int userChoice = Util.intMenu("\nMain menu", new String[]{"New game", "Options", "Hand score test", "Exit"});
 			
 			if(userChoice == 1)
 				newGame();
@@ -23,7 +23,10 @@ public class Sushi {
 				else
 					continue;
 			}
-			else if(userChoice == 3)
+			else if(userChoice == 3) {
+				
+			}
+			else if(userChoice == 4)
 				break;
 		}		
 	}
