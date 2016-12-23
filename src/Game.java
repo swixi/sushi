@@ -36,11 +36,8 @@ public class Game {
 			
 	}
 
-	public void runRound(int round) {
-		
-		
-		
-		System.out.println("Starting round " + (round+1) + "!");
+	public void runRound(int round) {		
+		System.out.println("Starting ROUND " + (round+1) + "!");
 		for(Player player : players)
 			player.initRoundDeck(HAND_SIZE);
 		
@@ -53,9 +50,22 @@ public class Game {
 			players.get(0).addToDeck(hands.get(0).get(choice-1), round);
 			hands.get(0).remove(choice-1);
 			
+			//pick for the AI
+			for(int j = 1; j < PLAYER_COUNT; j++)
+				hands.get(j).remove(0);
 			
+			hands = rotateHands(hands);
 			
 		}
+	}
+	
+	//moves each hand to the left
+	public Map<Integer, List<Card>> rotateHands(Map<Integer, List<Card>> hands) {
+		Map<Integer, List<Card>> rotatedHands = new HashMap<Integer, List<Card>>();
+		for(int i = 0; i < PLAYER_COUNT; i++) {
+			rotatedHands.put(i, hands.get( (i+1) % PLAYER_COUNT ));
+		}
+		return rotatedHands;
 	}
 	
 	//randomly create hands, one for each player, each of size HAND_SIZE
