@@ -32,7 +32,7 @@ public class Game {
 		for(int i = 0; i < 3; i++)
 			runRound(i);
 		
-		//scoreGame();
+		scoreGame();
 			
 	}
 
@@ -59,7 +59,12 @@ public class Game {
 			}
 			
 			hands = rotateHands(hands);
-			System.out.println("\nYour cards: " + curPlayer.getHand(round));
+			
+			System.out.println("");
+			for(int j = 0; j < PLAYER_COUNT; j++) {
+				System.out.println("Player " + (j+1) + ": " + players.get(j).getHand(round));
+			}
+			System.out.println("");
 		}
 		
 		scoreRound(round);
@@ -162,7 +167,7 @@ public class Game {
 	
 	//no maki
 	//MODIFIES PLAYER HANDS
-	public int scoreHand(List<Card> hand) {
+	public static int scoreHand(List<Card> hand) {
 		int score = 0;
 		int nextInstance = -1;
 		Card card;
@@ -230,7 +235,7 @@ public class Game {
 		return score;
 	}
 	
-	//can probably do this in one loop if you think about it for 10 minutes
+	//can probably simplify this a lot if you think about it for 10 minutes
 	public void scoreMaki(int[] makiSums, int[] roundScores) {
 		int largestSum = 0;
 		int secondLargestSum = 0;
@@ -251,8 +256,12 @@ public class Game {
 				secondPlaceCount++;
 		}
 		
-		int firstPoints = 6/firstPlaceCount;
-		int secondPoints = (firstPlaceCount > 1) ? 0 : 3/secondPlaceCount;
+		int firstPoints = 0;
+		int secondPoints = 0;
+		if(largestSum > 0)
+			firstPoints = 6/firstPlaceCount;
+		if(secondLargestSum > 0 && firstPlaceCount == 1)
+			secondPoints = 3/secondPlaceCount;
 		
 		for(int i = 0; i < PLAYER_COUNT; i++) {
 			if(makiSums[i] == largestSum)
@@ -260,5 +269,9 @@ public class Game {
 			else if(makiSums[i] == secondLargestSum)
 				roundScores[i] += secondPoints;
 		}
+	}
+	
+	public void scoreGame() {
+		
 	}
 }

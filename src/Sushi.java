@@ -1,4 +1,7 @@
-public class Sushi {	
+import java.util.ArrayList;
+import java.util.List;
+
+public class Sushi {
 	public static boolean descriptiveNames = false;
 	
 	public static void main(String[] args) {
@@ -24,6 +27,7 @@ public class Sushi {
 					continue;
 			}
 			else if(userChoice == 3) {
+				//userChoice = -1;
 				
 			}
 			else if(userChoice == 4)
