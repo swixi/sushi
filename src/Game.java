@@ -33,8 +33,9 @@ public class Game {
 			runRound(i);
 		
 		int[] finalScores = scoreGame();
+		int maxScore = Util.max(finalScores);
 		for(int i = 0; i < PLAYER_COUNT; i++)
-			System.out.println("Player: " + (i+1) + finalScores[i]);	
+			System.out.println("Player " + (i+1) + ": " + finalScores[i] + (finalScores[i] == maxScore ? " (WINNER!)" : ""));	
 	}
 
 	public void runRound(int round) {		
@@ -141,7 +142,7 @@ public class Game {
 			Player player = players.get(i);
 			List<Card> hand = player.getHand(round);
 			
-			//first count maki and remove from hand
+			//first count maki & puddings, remove the maki (pudding will be removed in scoreHand to save lines)
 			for(int j = 0; j < hand.size(); j++) {
 				Card card = hand.get(j);
 				if(card.getName().contains("maki")) {
@@ -150,8 +151,11 @@ public class Game {
 					hand.remove(j);
 					j--;
 				}
+				else if(card.getName().equals("pudding"))
+					player.addPudding();
 			}			
 			
+			//score the rest of the cards
 			roundScores[i] += scoreHand(hand);			
 		}
 		
@@ -160,14 +164,14 @@ public class Game {
 		for(int i = 0; i < PLAYER_COUNT; i++) {
 			players.get(i).addScore(roundScores[i]);
 			System.out.println("Player " + (i+1) + ": " + players.get(i).getScore() + " (+" + roundScores[i] + ")"
-					+ " (Maki score: " + makiSums[i] + ")");
+					+ " (Maki score: " + makiSums[i] + ") (Total puddings: " + players.get(i).puddingScore() + ")");
 		}
 		
 		System.out.println("");
 	}
 	
-	//no maki
-	//MODIFIES PLAYER HANDS
+	//no maki or pudding scoring
+	//MODIFIES PLAYER HANDS, eg will not be able to access round 1 hand after round 1
 	public static int scoreHand(List<Card> hand) {
 		int score = 0;
 		int nextInstance = -1;
@@ -248,6 +252,8 @@ public class Game {
 				secondLargestSum = largestSum;
 				largestSum = sum;
 			}
+			else if(sum > secondLargestSum)
+				secondLargestSum = sum;
 		}
 		
 		for(int i = 0; i < PLAYER_COUNT; i++) {
@@ -307,7 +313,7 @@ public class Game {
 		
 		System.out.println("Pudding scores:");
 		for(int i = 0; i < PLAYER_COUNT; i++)
-			System.out.println("Player: " + (i+1) + (puddingPoints[i] < 0 ? "-" : "+") + puddingPoints[i]); 
+			System.out.println("Player " + (i+1) + ": " + (puddingPoints[i] < 0 ? "-" : "+") + puddingPoints[i]); 
 		System.out.println("");
 		
 		//final scores
@@ -316,8 +322,6 @@ public class Game {
 			players.get(i).addScore(puddingPoints[i]); 
 			finalScores[i] = players.get(i).getScore();
 		}
-
-
 
 		return finalScores;
 		
