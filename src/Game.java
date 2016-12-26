@@ -34,8 +34,12 @@ public class Game {
 		
 		int[] finalScores = scoreGame();
 		int maxScore = Util.max(finalScores);
+		System.out.println("FINAL SCORES:");
 		for(int i = 0; i < PLAYER_COUNT; i++)
-			System.out.println("Player " + (i+1) + ": " + finalScores[i] + (finalScores[i] == maxScore ? " (WINNER!)" : ""));	
+			System.out.println("Player " + (i+1) + ": " + finalScores[i] + (finalScores[i] == maxScore ? " (WINNER!)" : ""));
+		
+		System.out.println("");
+		Util.waitForEnter();
 	}
 
 	public void runRound(int round) {		
@@ -91,7 +95,6 @@ public class Game {
 			
 			for(int j = 0; j < HAND_SIZE; j++) {
 				String randCard = Card.NAMES[(int) (System.nanoTime() % Card.NAMES.length)];
-				//System.out.println(randCard);
 				int copiesLeft = cardPool.get(randCard);
 				
 				if(copiesLeft > 0) {
@@ -280,28 +283,22 @@ public class Game {
 	
 	//so many loops...
 	public int[] scoreGame() {
-		//score puddings
+		//score puddings		
+		int[] puddings = new int[PLAYER_COUNT];
+		for(int i = 0; i < PLAYER_COUNT; i++)
+			puddings[i] = players.get(i).puddingScore();
+		
+		int maxPudding = Util.max(puddings);
+		int minPudding = Util.min(puddings);
+
+		int[] puddingPoints = new int[PLAYER_COUNT];
 		List<Integer> maxPuddingPlayers = new ArrayList<Integer>();
 		List<Integer> minPuddingPlayers = new ArrayList<Integer>();
-		int maxPudding = players.get(0).puddingScore();
-		int minPudding = maxPudding;
-		int[] puddingPoints = new int[PLAYER_COUNT];
 
-		for(int i = 0; i < PLAYER_COUNT; i++) {
-			Player curPlayer = players.get(i);
-			if(curPlayer.puddingScore() > maxPudding) {
-				maxPudding = curPlayer.puddingScore();
-				maxPuddingPlayers = new ArrayList<Integer>();
-				maxPuddingPlayers.add(i);
-			}
-			else if(curPlayer.puddingScore() < minPudding) {
-				minPudding = curPlayer.puddingScore();
-				minPuddingPlayers = new ArrayList<Integer>();
-				minPuddingPlayers.add(i);
-			}
-			else if(curPlayer.puddingScore() == maxPudding) 
+		for(int i = 0; i < PLAYER_COUNT; i++) {			
+			if(players.get(i).puddingScore() == maxPudding) 
 				maxPuddingPlayers.add(i);			
-			else if(curPlayer.puddingScore() == minPudding)
+			if(players.get(i).puddingScore() == minPudding)
 				minPuddingPlayers.add(i);
 		}
 		
@@ -309,11 +306,13 @@ public class Game {
 			puddingPoints[playerIndex] = 6/maxPuddingPlayers.size();
 				
 		for(Integer playerIndex : minPuddingPlayers) 
-			puddingPoints[playerIndex] = 6/minPuddingPlayers.size();
+			//avoid the case of a tie, where all players would be both in min and max
+			if(puddingPoints[playerIndex] == 0)
+				puddingPoints[playerIndex] = -6/minPuddingPlayers.size();
 		
 		System.out.println("Pudding scores:");
 		for(int i = 0; i < PLAYER_COUNT; i++)
-			System.out.println("Player " + (i+1) + ": " + (puddingPoints[i] < 0 ? "-" : "+") + puddingPoints[i]); 
+			System.out.println("Player " + (i+1) + ": " + (puddingPoints[i] < 0 ? "" : "+") + puddingPoints[i]); 
 		System.out.println("");
 		
 		//final scores
@@ -324,15 +323,5 @@ public class Game {
 		}
 
 		return finalScores;
-		
-		/*
-		//return winner
-		int maxScore = Util.max(finalScores);
-		int[] winners = new int[PLAYER_COUNT];
-		for(int i = 0; i < PLAYER_COUNT; i++)
-			if(players.get(i).getScore() == maxScore)
-				winners[i] = 1;
-		return winners;
-		*/
 	}
 }

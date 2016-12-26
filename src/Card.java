@@ -38,13 +38,8 @@ public class Card {
 		return name;
 	}
 	
-	public boolean isNigiri() {
-		return name.contains("nigiri");
-	}
-	
 	@Override
 	public String toString() {
 		return name;
 	}
-	
 }

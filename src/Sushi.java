@@ -1,6 +1,3 @@
-import java.util.ArrayList;
-import java.util.List;
-
 public class Sushi {
 	public static boolean descriptiveNames = false;
 	
@@ -10,7 +7,7 @@ public class Sushi {
 	}
 	
 	public void run() {
-		System.out.println("MMMM SUSHI GO!");
+		System.out.println("\nMMMM SUSHI GO!");
 		
 		while(true) {
 			int userChoice = Util.intMenu("\nMain menu", new String[]{"New game", "Options", "Hand score test", "Exit"});
