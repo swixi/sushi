@@ -120,4 +120,20 @@ public class Util {
 		 }
 		 return -1;
 	}
+	
+	public static int max(int[] arr) {
+		int max = arr[0];
+		for(int elt : arr) 
+			if(elt > max)
+				max = elt;
+		return max;
+	}
+	
+	public static int min(int[] arr) {
+		int min = arr[0];
+		for(int elt : arr)
+			if(elt < min)
+				min = elt;
+		return min;
+	}
 }

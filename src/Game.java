@@ -32,8 +32,9 @@ public class Game {
 		for(int i = 0; i < 3; i++)
 			runRound(i);
 		
-		scoreGame();
-			
+		int[] finalScores = scoreGame();
+		for(int i = 0; i < PLAYER_COUNT; i++)
+			System.out.println("Player: " + (i+1) + finalScores[i]);	
 	}
 
 	public void runRound(int round) {		
@@ -271,7 +272,63 @@ public class Game {
 		}
 	}
 	
-	public void scoreGame() {
+	//so many loops...
+	public int[] scoreGame() {
+		//score puddings
+		List<Integer> maxPuddingPlayers = new ArrayList<Integer>();
+		List<Integer> minPuddingPlayers = new ArrayList<Integer>();
+		int maxPudding = players.get(0).puddingScore();
+		int minPudding = maxPudding;
+		int[] puddingPoints = new int[PLAYER_COUNT];
+
+		for(int i = 0; i < PLAYER_COUNT; i++) {
+			Player curPlayer = players.get(i);
+			if(curPlayer.puddingScore() > maxPudding) {
+				maxPudding = curPlayer.puddingScore();
+				maxPuddingPlayers = new ArrayList<Integer>();
+				maxPuddingPlayers.add(i);
+			}
+			else if(curPlayer.puddingScore() < minPudding) {
+				minPudding = curPlayer.puddingScore();
+				minPuddingPlayers = new ArrayList<Integer>();
+				minPuddingPlayers.add(i);
+			}
+			else if(curPlayer.puddingScore() == maxPudding) 
+				maxPuddingPlayers.add(i);			
+			else if(curPlayer.puddingScore() == minPudding)
+				minPuddingPlayers.add(i);
+		}
 		
+		for(Integer playerIndex : maxPuddingPlayers) 
+			puddingPoints[playerIndex] = 6/maxPuddingPlayers.size();
+				
+		for(Integer playerIndex : minPuddingPlayers) 
+			puddingPoints[playerIndex] = 6/minPuddingPlayers.size();
+		
+		System.out.println("Pudding scores:");
+		for(int i = 0; i < PLAYER_COUNT; i++)
+			System.out.println("Player: " + (i+1) + (puddingPoints[i] < 0 ? "-" : "+") + puddingPoints[i]); 
+		System.out.println("");
+		
+		//final scores
+		int[] finalScores = new int[PLAYER_COUNT];
+		for(int i = 0; i < PLAYER_COUNT; i++) {
+			players.get(i).addScore(puddingPoints[i]); 
+			finalScores[i] = players.get(i).getScore();
+		}
+
+
+
+		return finalScores;
+		
+		/*
+		//return winner
+		int maxScore = Util.max(finalScores);
+		int[] winners = new int[PLAYER_COUNT];
+		for(int i = 0; i < PLAYER_COUNT; i++)
+			if(players.get(i).getScore() == maxScore)
+				winners[i] = 1;
+		return winners;
+		*/
 	}
 }

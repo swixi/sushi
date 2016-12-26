@@ -6,13 +6,14 @@ public class Player {
 	private final int TYPE;
 	private int score;
 	private List<List<Card>> deck;
-	private List<Card> puddings;
+	private int puddings;
 	private int[] maki;
 
 	public Player(int type) {
 		TYPE = type;
 		deck = new ArrayList<List<Card>>(3);
 		maki = new int[3];
+		puddings = 0;
 	}
 
 	public int getType() {
@@ -41,9 +42,11 @@ public class Player {
 	}
 	
 	public void addPudding() {
-		if(puddings == null)
-			puddings = new ArrayList<Card>();
-		puddings.add(new Card("pudding"));
+		puddings++;
+	}
+	
+	public int puddingScore() {
+		return puddings;
 	}
 	
 	public void addMaki(int amount, int round) {
