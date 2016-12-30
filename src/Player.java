@@ -8,12 +8,14 @@ public class Player {
 	private List<List<Card>> deck;
 	private int puddings;
 	private int[] maki;
+	String name;
 
-	public Player(int type) {
+	public Player(int type, String name) {
 		TYPE = type;
 		deck = new ArrayList<List<Card>>(3);
 		maki = new int[3];
 		puddings = 0;
+		this.name = name;
 	}
 
 	public int getType() {
@@ -55,5 +57,10 @@ public class Player {
 	
 	public int getMaki(int round) {
 		return maki[round];
+	}
+	
+	@Override
+	public String toString() {
+		return name;
 	}
 }

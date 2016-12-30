@@ -23,10 +23,11 @@ public class Game {
 		System.out.println("\nStarting new game with " + PLAYER_COUNT + " players.\n");
 		
 		players = new ArrayList<Player>(PLAYER_COUNT);
-		players.add(new Player(Player.HUMAN));
-		for(int i = 0; i < PLAYER_COUNT - 1; i++)
-			players.add(new Player(Player.AI));
-		
+		players.add(new Player(Player.HUMAN, "Player 1"));
+		for(int i = 0; i < PLAYER_COUNT - 2; i++)
+			players.add(new Player(Player.AI, "Player " + (i+2)));
+		players.add(new Player(Player.AI, "AJ528"));
+			
 		initPool();
 		
 		for(int i = 0; i < 3; i++)
@@ -36,12 +37,12 @@ public class Game {
 		int maxScore = Util.max(finalScores);
 		System.out.println("FINAL SCORES:");
 		for(int i = 0; i < PLAYER_COUNT; i++)
-			System.out.println("Player " + (i+1) + ": " + finalScores[i] + (finalScores[i] == maxScore ? " (WINNER!)" : ""));
+			System.out.println(players.get(i) + ": " + finalScores[i] + (finalScores[i] == maxScore ? " (WINNER!)" : ""));
 		
 		System.out.println("");
 		Util.waitForEnter();
 	}
-
+	
 	public void runRound(int round) {		
 		System.out.println(" --------\n|ROUND " + (round+1) + "!|\n --------\n");
 		for(Player player : players)
@@ -51,14 +52,14 @@ public class Game {
 		Map<Integer, List<Card>> hands = initHands();
 		
 		for(int i = 0; i < HAND_SIZE; i++) {
-			//process humans
+			//process human picks
 			Player curPlayer = players.get(0);			
 			List<Card> curHand = hands.get(0);
 			int choice = Util.intMenu("Choose a card:", Util.cardsToStrings(curHand));
 			curPlayer.addToDeck(curHand.get(choice-1), round);
 			curHand.remove(choice-1);
 			
-			//process AI (right now, always choose the first card)
+			//process AI picks (right now, always choose the first card)
 			for(int j = 1; j < PLAYER_COUNT; j++) {
 				players.get(j).addToDeck(hands.get(j).get(0), round);
 				hands.get(j).remove(0);
@@ -66,9 +67,10 @@ public class Game {
 			
 			hands = rotateHands(hands);
 			
+			//display the current hands of each player		
 			System.out.println("");
 			for(int j = 0; j < PLAYER_COUNT; j++) {
-				System.out.println("Player " + (j+1) + ": " + players.get(j).getHand(round));
+				System.out.println(players.get(j) + ": " + players.get(j).getHand(round));
 			}
 			System.out.println("");
 		}
@@ -93,6 +95,7 @@ public class Game {
 		for(int i = 0; i < PLAYER_COUNT; i++) {
 			List<Card> hand = new ArrayList<Card>(HAND_SIZE);
 			
+			//pick a card at random and check if it has any entries left in cardPool
 			for(int j = 0; j < HAND_SIZE; j++) {
 				String randCard = Card.NAMES[(int) (System.nanoTime() % Card.NAMES.length)];
 				int copiesLeft = cardPool.get(randCard);
@@ -166,7 +169,7 @@ public class Game {
 		
 		for(int i = 0; i < PLAYER_COUNT; i++) {
 			players.get(i).addScore(roundScores[i]);
-			System.out.println("Player " + (i+1) + ": " + players.get(i).getScore() + " (+" + roundScores[i] + ")"
+			System.out.println(players.get(i) + ": " + players.get(i).getScore() + " (+" + roundScores[i] + ")"
 					+ " (Maki score: " + makiSums[i] + ") (Total puddings: " + players.get(i).puddingScore() + ")");
 		}
 		
@@ -312,7 +315,7 @@ public class Game {
 		
 		System.out.println("Pudding scores:");
 		for(int i = 0; i < PLAYER_COUNT; i++)
-			System.out.println("Player " + (i+1) + ": " + (puddingPoints[i] < 0 ? "" : "+") + puddingPoints[i]); 
+			System.out.println(players.get(i) + ": " + (puddingPoints[i] < 0 ? "" : "+") + puddingPoints[i]); 
 		System.out.println("");
 		
 		//final scores
