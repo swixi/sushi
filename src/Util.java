@@ -58,8 +58,10 @@ public class Util {
 		return intMenu(title, numbering);
 	}
 	
-	public static String strMenu(String[] args) {
-		return null;
+	public static String strMenu(String title) {
+		scanner = new Scanner(System.in);
+		System.out.println(title);
+		return scanner.nextLine();
 	}
 	
 	public static void waitForEnter() {

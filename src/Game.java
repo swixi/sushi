@@ -20,14 +20,14 @@ public class Game {
 		else
 			HAND_SIZE = -1;
 		
-		System.out.println("\nStarting new game with " + PLAYER_COUNT + " players.\n");
-		
 		players = new ArrayList<Player>(PLAYER_COUNT);
-		players.add(new Player(Player.HUMAN, "Player 1"));
+		players.add(new Player(Player.HUMAN, Util.strMenu("\nChoose your name:")));
 		for(int i = 0; i < PLAYER_COUNT - 2; i++)
 			players.add(new Player(Player.AI, "Player " + (i+2)));
 		players.add(new Player(Player.AI, "AJ528"));
 			
+		System.out.println("\nStarting new game with " + PLAYER_COUNT + " players.\n");
+
 		initPool();
 		
 		for(int i = 0; i < 3; i++)
