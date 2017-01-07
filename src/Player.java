@@ -43,6 +43,20 @@ public class Player {
 		deck.get(round).add(card);
 	}
 	
+	//Remove the first instance of chopsticks from the player's hand and return it, null otherwise
+	public Card popChopsticks(int round)
+	{
+		for(int i = 0; i < deck.get(round).size(); i++)
+			if(deck.get(round).get(i).getName().equals("chopsticks"))
+			{
+				System.out.println("Found chopsticks, popping them...");
+				Card c = deck.get(round).get(i);
+				deck.get(round).remove(i);
+				return c;
+			}
+		return null;
+	}
+	
 	public void addPudding() {
 		puddings++;
 	}

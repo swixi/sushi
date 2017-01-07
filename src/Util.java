@@ -8,9 +8,10 @@ public class Util {
 	//INPUT: a title and an array of strings (options) to display to the user
 	//the options will be displayed with the numbers numbering[0], numbering[1], ...
 	//choices must contain non-negative integers (else will throw errors)
-	//OUTPUT: the user's (valid) choice
-	public static int intMenu(String title, String[] options, int[] numbering) {
+	//OUTPUT: the user's (valid) choice(s) as an array of integers
+	public static int[] intMenu(String title, String[] options, int[] numbering, boolean hasChopsticks) {
 		String display = title;
+		int[] chopstickChoices = new int[]{-1, -1};
 		
 		for(int i = 0; i < options.length; i++) {
 			display += "\n" + numbering[i] + ". " + options[i];
@@ -19,15 +20,30 @@ public class Util {
 		System.out.println(display);
 		
 		while(true) {
-			int userChoice = strToInt(getUserChoice());
 			
-			if(userChoice == PARSE_ERROR) {
-				System.out.println("That's not a number, dingus.");
-				continue;
+			String userChoice = getUserChoice();
+			int userIntChoice = strToInt(userChoice);
+			
+			
+			if(userIntChoice == PARSE_ERROR)
+			{
+				chopstickChoices = strToTwoInts(userChoice);
+				if(!hasChopsticks || chopstickChoices[0] == PARSE_ERROR)
+				{
+					System.out.println("That's not a number, dingus.");
+					continue;
+				}
+				
 			}
 			
-			if(findInArray(numbering, userChoice))
-				return userChoice;
+			if(findInArray(numbering, userIntChoice))
+			{
+				return new int[]{userIntChoice};
+			}
+			else if(hasChopsticks && findInArray(numbering, chopstickChoices[0]) && findInArray(numbering, chopstickChoices[1]))
+			{
+				return chopstickChoices;
+			}
 			
 			System.out.println("Not a valid option.");
 		}	
@@ -36,17 +52,27 @@ public class Util {
 	//INPUT: a title and an array of strings (options) to display to the user
 	//the options will be displayed with the default numbering 1, 2, ...
 	//OUTPUT: the user's (valid) choice or -1 if an error
-	public static int intMenu(String title, String[] options) {		
+	public static int[] intMenu(String title, String[] options) {		
 		int[] numbering = new int[options.length];
 		for(int i = 0; i < options.length; i++) {
 			numbering[i] = i+1;
 		}
-		return intMenu(title, options, numbering);		
+		return intMenu(title, options, numbering, false);		
 	}
+	
+	//Mirrored the above but can specify whether to consider inputs of 2 numbers as valid
+	public static int[] intMenu(String title, String[] options, boolean hasChopsticks) {		
+		int[] numbering = new int[options.length];
+		for(int i = 0; i < options.length; i++) {
+			numbering[i] = i+1;
+		}
+		return intMenu(title, options, numbering, hasChopsticks);		
+	}
+
 	
 	//no options displayed, only a given set of valid numbers
 	public static int intMenu(String title, int[] numbering) {
-		return intMenu(title, new String[0], numbering);
+		return intMenu(title, new String[0], numbering, false)[0];
 	}
 	
 	//assuming min and max are non-negative
@@ -85,6 +111,28 @@ public class Util {
 		catch(NumberFormatException e) {
 			return PARSE_ERROR;
 		}
+	}
+	
+	// Attempts to parse two numbers separated by a space from user input into an int[2].
+	// first number will be set to PARSE_ERROR if unsuccessful
+	public static int[] strToTwoInts(String input)
+	{
+		int[] results = new int[2];
+		try
+		{
+			String[] stringInputs = input.split(" ");
+			if(stringInputs.length == 2)
+			{
+				results[0] = Integer.parseInt(stringInputs[0]);
+				results[1] = Integer.parseInt(stringInputs[1]);
+			}
+		}
+		catch(Exception e)
+		{
+			results[0] = PARSE_ERROR;
+		}
+		
+		return results;
 	}
 	
 	public static boolean findInArray(int[] arr, int key) {
