@@ -55,9 +55,31 @@ public class Game {
 			//process human picks
 			Player curPlayer = players.get(0);			
 			List<Card> curHand = hands.get(0);
-			int choice = Util.intMenu("Choose a card:", Util.cardsToStrings(curHand));
-			curPlayer.addToDeck(curHand.get(choice-1), round);
-			curHand.remove(choice-1);
+			
+			//check if the player has chopsticks
+			boolean hasChopsticks = false;
+			for(Card c : curPlayer.getHand(round))
+				if(c.getName() == "chopsticks")
+				{
+					hasChopsticks = true;
+					break;
+				}
+			
+			System.out.println("hasChopsticks: " + hasChopsticks);
+			
+			int[] choice = Util.intMenu("Choose a card:", Util.cardsToStrings(curHand), hasChopsticks);
+			
+			//we always add at least 1 card to the player's deck.
+			curPlayer.addToDeck(curHand.get(choice[0]-1), round);
+			curHand.remove(choice[0]-1);
+			
+			//if the player chose two cards then put their chopsticks back in the hand and add the second choice to their deck.
+			if(choice.length == 2)
+			{
+				curPlayer.addToDeck(curHand.get(choice[1] - 1), round);
+				curHand.remove(choice[1] - 1);
+				curHand.add(curPlayer.popChopsticks(round));
+			}
 			
 			//process AI picks (right now, always choose the first card)
 			for(int j = 1; j < PLAYER_COUNT; j++) {
